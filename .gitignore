@@ -1,0 +1,7 @@
+module/Debug/*
+module/ipch/*
+module/Release/*
+*.sdf
+*.opensdf
+*.suo
+*.user
