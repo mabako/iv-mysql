@@ -33,6 +33,7 @@
 #include "handler.h"
 #include "result.h"
 #include <string>
+#include <stdlib.h>
 #include <list>
 using namespace std;
 
@@ -44,7 +45,7 @@ list< MySQL_Result* > results;
 
 /* Checks if the parameter at index idx is a valid MySQL Handler, if so stores it in the 'handler' variable, otherwise returns an error and exits. */
 #define CHECK_HANDLER(idx) \
-	MySQL* handler = NULL; \
+	MySQL* handler = 0; \
 	{ \
 		SQUserPointer sqTemp; \
 		sq_getuserpointer( S, idx+1, &sqTemp ); \
@@ -56,7 +57,7 @@ list< MySQL_Result* > results;
 				break; \
 			} \
 		} \
-		if( handler == NULL ) \
+		if( handler == 0 ) \
 		{ \
 			LogPrintf( "Invalid MySQL-Handler" ); \
 			sq_pushbool( S, false ); \
@@ -66,7 +67,7 @@ list< MySQL_Result* > results;
 
 /* Checks if the parameter at index idx is a valid MySQL Result, if so stores it in the 'result' variable, otherwise returns an error and exits. */
 #define CHECK_RESULT(idx) \
-	MySQL_Result* result = NULL; \
+	MySQL_Result* result = 0; \
 	{ \
 		SQUserPointer sqTemp; \
 		sq_getuserpointer( S, idx+1, &sqTemp ); \
@@ -78,7 +79,7 @@ list< MySQL_Result* > results;
 				break; \
 			} \
 		} \
-		if( result == NULL ) \
+		if( result == 0 ) \
 		{ \
 			LogPrintf( "Invalid MySQL-Result" ); \
 			sq_pushbool( S, false ); \
@@ -263,7 +264,7 @@ int sq_mysql_fetch_assoc(vm S)
 			result->FieldSeek( 0 );
 			MYSQL_FIELD* field;
 			int i = 0;
-			for( field = result->FetchField( ), i = 0; field != NULL; field = result->FetchField( ), i ++ )
+			for( field = result->FetchField( ), i = 0; field != 0; field = result->FetchField( ), i ++ )
 			{
 				sq_pushstring( S, field->name, field->name_length );
 				if( row[i] )

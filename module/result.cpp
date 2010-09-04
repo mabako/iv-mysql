@@ -46,14 +46,14 @@ MySQL_Result::~MySQL_Result( )
 
 const bool MySQL_Result::Empty( )
 {
-	return m_result == NULL;
+	return m_result == 0;
 }
 
 MYSQL_ROW MySQL_Result::FetchRow( )
 {
 	if( !Empty( ) )
 		return mysql_fetch_row( m_result );
-	return NULL;
+	return 0;
 }
 
 unsigned int MySQL_Result::FieldSeek( unsigned int offset )

@@ -34,8 +34,10 @@
 #ifndef __HANDLER_H
 #define __HANDLER_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <WinSock2.h>
+#include <string.h>
+#ifdef _WIN32
+	#include <WinSock2.h>
+#endif
 #include <mysql.h>
 #include "result.h"
 

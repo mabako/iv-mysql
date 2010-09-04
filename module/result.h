@@ -34,8 +34,9 @@
 #ifndef __RESULT_H
 #define __RESULT_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <WinSock2.h>
+#ifdef _WIN32
+	#include <WinSock2.h>
+#endif
 #include <mysql.h>
 
 class MySQL_Result
