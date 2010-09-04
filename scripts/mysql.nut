@@ -152,7 +152,7 @@ class mysql
 			local result = mysql_query( handler, string );
 			if( result )
 			{
-				local row = mysql_fetch_assoc( result ) )
+				local row = mysql_fetch_assoc( result );
 				if( row )
 				{
 					mysql_free_result( result );
@@ -174,7 +174,7 @@ class mysql
 			local result = mysql_query( handler, string );
 			if( result )
 			{
-				local rows = mysql_affected_rows( result ) )
+				local rows = mysql_affected_rows( result );
 				mysql_free_result( result );
 				return rows;
 			}
