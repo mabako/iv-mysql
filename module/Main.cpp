@@ -43,7 +43,7 @@ const char * g_szModuleName = "MySQL Module";
 EXPORT bool InitModule(char * szModuleName)
 {
 	strcpy(szModuleName, g_szModuleName);
-	LogPrintf("MySQL Module 1.00 by mabako loaded.");
+	LogPrintf("MySQL Module 1.0c by mabako loaded.");
 	return true;
 }
 

@@ -271,44 +271,40 @@ int sq_mysql_fetch_assoc(vm S)
 				{
 					switch( field->type )
 					{
-					case MYSQL_TYPE_DECIMAL:
-					case MYSQL_TYPE_NEWDECIMAL:
-					case MYSQL_TYPE_FLOAT:
-					case MYSQL_TYPE_DOUBLE:
-						sq_pushfloat( S, static_cast < float > ( atof( row[i] ) ) );
-						break;
-#ifdef MYSQL_HAS_TINY
-					case MYSQL_TYPE_TINY:
-#endif
-					case MYSQL_TYPE_SHORT:
-					case MYSQL_TYPE_LONG:
-					case MYSQL_TYPE_LONGLONG:
-					case MYSQL_TYPE_INT24:
-#ifdef MYSQL_HAS_YEAR
-					case MYSQL_TYPE_YEAR:
-#endif
-					case MYSQL_TYPE_BIT:
-						sq_pushinteger( S, atoi( row[i] ) );
-						break;
-					case MYSQL_TYPE_NULL:
-						sq_pushnull( S );
-						break;
-					default:
-					case MYSQL_TYPE_VARCHAR:
-					case MYSQL_TYPE_SET:
-					case MYSQL_TYPE_VAR_STRING:
-					case MYSQL_TYPE_STRING:
-					case MYSQL_TYPE_TIMESTAMP:
-					case MYSQL_TYPE_DATE:
-					case MYSQL_TYPE_TIME:
-					case MYSQL_TYPE_DATETIME:
-					case MYSQL_TYPE_NEWDATE:
-					case MYSQL_TYPE_TINY_BLOB:
-					case MYSQL_TYPE_MEDIUM_BLOB:
-					case MYSQL_TYPE_LONG_BLOB:
-					case MYSQL_TYPE_BLOB:
-						sq_pushstring( S, row[i], strlen( row[i] ) );
-						break;
+						case MYSQL_TYPE_DECIMAL:
+						case MYSQL_TYPE_NEWDECIMAL:
+						case MYSQL_TYPE_FLOAT:
+						case MYSQL_TYPE_DOUBLE:
+							sq_pushfloat( S, static_cast < float > ( atof( row[i] ) ) );
+							break;
+						case MYSQL_TYPE_TINY:
+						case MYSQL_TYPE_SHORT:
+						case MYSQL_TYPE_LONG:
+						case MYSQL_TYPE_LONGLONG:
+						case MYSQL_TYPE_INT24:
+						case MYSQL_TYPE_YEAR:
+						case MYSQL_TYPE_BIT:
+							sq_pushinteger( S, atoi( row[i] ) );
+							break;
+						case MYSQL_TYPE_NULL:
+							sq_pushnull( S );
+							break;
+						default:
+						case MYSQL_TYPE_VARCHAR:
+						case MYSQL_TYPE_SET:
+						case MYSQL_TYPE_VAR_STRING:
+						case MYSQL_TYPE_STRING:
+						case MYSQL_TYPE_TIMESTAMP:
+						case MYSQL_TYPE_DATE:
+						case MYSQL_TYPE_TIME:
+						case MYSQL_TYPE_DATETIME:
+						case MYSQL_TYPE_NEWDATE:
+						case MYSQL_TYPE_TINY_BLOB:
+						case MYSQL_TYPE_MEDIUM_BLOB:
+						case MYSQL_TYPE_LONG_BLOB:
+						case MYSQL_TYPE_BLOB:
+							sq_pushstring( S, row[i], strlen( row[i] ) );
+							break;
 					}
 				}
 				else
