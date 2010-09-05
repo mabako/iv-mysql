@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -m32 -shared -Wall -fPIC -I./ -I./mysql/
+FLAGS = -m32 -shared -Wall -fPIC -I./ `mysql_config --libs --include`
 
 OUTFILE = iv-mysql.so
 
