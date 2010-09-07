@@ -174,7 +174,7 @@ class mysql
 			local result = mysql_query( handler, string );
 			if( result )
 			{
-				local rows = mysql_affected_rows( result );
+				local rows = mysql_affected_rows( handler );
 				mysql_free_result( result );
 				return rows;
 			}
