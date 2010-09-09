@@ -183,4 +183,141 @@ class mysql
 		}
 		return false;
 	}
+	
+	// SQL stuff
+	function column_string( column )
+	{
+		local str = "`" + escape( column.name ) + "` " + escape( column.type );
+		if( !column.rawin( "allownull" ) || !column.allownull )
+			str += " NOT NULL";
+		if( column.rawin( "defaultv" ) && column.defaultv != null )
+			str += " DEFAULT " + ( column.defaultv == "CURRENT_TIMESTAMP" ? "CURRENT_TIMESTAMP" : ( "'" + escape( column.defaultv.tostring( ) ) + "'" ) );
+		if( column.rawin( "auto_increment" ) && column.auto_increment )
+			str += " AUTO_INCREMENT";
+		return str;
+	}
+	
+	function create_table( name, columns )
+	{
+		if( connected( ) )
+		{
+			local function concat( table, sep )
+			{
+				if( table.len( ) == 0 )
+					return "";
+				
+				local str = table[0];
+				for( local i = 1; i < table.len( ); i ++ )
+					str += sep + table[i];
+				return str;
+			}
+			
+			if( !sql.query_assoc_single( "SHOW TABLES LIKE '" + escape( name ) + "'" ) )
+			{
+				// table doesn't exist, create it
+				local cols = [ ];
+				local keys = [ ];
+				local autoIncrementValue = "";
+				
+				foreach( column in columns )
+				{
+					if( column.rawin( "primary_key" ) )
+						keys.push( "`" + escape( column.name ) + "`" );
+					
+					if( column.rawin( "auto_increment" ) && typeof( column.auto_increment ) == "integer" )
+						autoIncrementValue = " AUTO_INCREMENT = " + value.auto_increment;
+					
+					cols.push( column_string( column ) );
+				}
+				
+				if( keys.len( ) >= 1 )
+					cols.push( "PRIMARY KEY (" + concat( keys, ", " ) + ")" );
+				
+				return query( "CREATE TABLE `" + name + "`\n(\n  " + concat( cols, ",\n  " ) + "\n) ENGINE = MyISAM DEFAULT CHARSET = utf8" + autoIncrementValue );
+			}
+			else
+			{
+				// make sure all columns exist
+				local fields = { };
+				local keys = [ ];
+				local has_primary_key = false;
+				local change_primary_keys = false;
+				
+				foreach( field in query_assoc( "DESCRIBE `" + escape( name ) + "`" ) )
+				{
+					fields[ field.Field ] <- { name = field.Field, type = field.Type };
+					
+					if( field.Null == "YES" )
+						fields[ field.Field ].allownull <- true;
+					
+					if( field.Extra == "auto_increment" )
+						fields[ field.Field ].auto_increment <- true;
+					
+					if( field.rawin( "Default" ) )
+						fields[ field.Field ].defaultv <- field.rawget( "Default" );
+					
+					if( field.Key == "PRI" )
+					{
+						fields[ field.Field ].primary_key <- true;
+						has_primary_key = true;
+					}
+				}
+				
+				local insertWhere = "FIRST";
+				foreach( column in columns )
+				{
+					if( !fields.rawin( column.name ) )
+					{
+						if( !query( "ALTER TABLE `" + escape( name ) + "` ADD " + column_string( column ) + " " + insertWhere ) && false )
+						{
+							return false;
+						}
+					}
+					else
+					{
+						// check if it matches our definition
+						if( column_string( fields[ column.name ] ) != column_string( column ) )
+						{
+							if( !query( "ALTER TABLE `" + escape( name ) + "` MODIFY COLUMN " + column_string( column ) ) && false )
+							{
+								return false;
+							}
+						}
+					}
+					
+					// verify primary keys
+					if( column.rawin( "primary_key" ) )
+						keys.push( "`" + escape( column.name ) + "`" );
+					if( !fields.rawin( column.name ) )
+					{
+						if( column.rawin( "primary_key" ) )
+							change_primary_keys = true;
+					}
+					else if( fields[ column.name ].rawin( "primary_key" ) != column.rawin( "primary_key" ) )
+						change_primary_keys = true;
+					
+					insertWhere = "AFTER `" + escape( column.name ) + "`"
+				}
+				
+				// change_primary_keys
+				if( change_primary_keys )
+				{
+					if( has_primary_key )
+					{
+						if( keys.len( ) == 0 )
+							query( "ALTER TABLE `" + escape( name ) + "` DROP PRIMARY KEY" );
+						else
+							query( "ALTER TABLE `" + escape( name ) + "` DROP PRIMARY KEY, ADD PRIMARY KEY(" + concat( keys, ", " ) + ")" )
+					}
+					else if( keys.len( ) > 0 ) // New primary key(s), had none
+					{
+						query( "ALTER TABLE `" + escape( name ) + "` ADD PRIMARY KEY(" + concat( keys, ", " ) + ")" )
+					}
+				}
+				return true;
+			}
+			return true;
+		}
+		return false;
+	}
 }
