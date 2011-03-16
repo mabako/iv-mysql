@@ -7,24 +7,11 @@
 #include <string.h>
 #include "Squirrel.h"
 
-#if defined _WIN32 || defined __CYGWIN__
-  #ifdef __GNUC__
-    #define EXPORT extern "C" __attribute__((dllexport))
-  #else
-    #define EXPORT extern "C" __declspec(dllexport) // Note: actually gcc seems to also supports this syntax.
-  #endif
+#ifndef _LINUX
+#define EXPORT extern "C" __declspec(dllexport)
 #else
-  #if __GNUC__ >= 4
-    #define EXPORT extern "C" __attribute__((visibility("default")))
-  #else
-    #define EXPORT
-  #endif
+#define EXPORT extern "C"
 #endif
-
-enum eModuleCallback
-{
-	TestCallback
-};
 
 typedef void (* LogPrintf_t)(const char * szFormat, ...);
 #define LogPrintf FuncContainer.myLogPrintf

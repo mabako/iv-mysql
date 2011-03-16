@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, mabako
+ * Copyright (c) 2010-2011, mabako
  *
  * All rights reserved.
  *

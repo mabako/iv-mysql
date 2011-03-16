@@ -11,6 +11,10 @@ EXPORT void SetupFunctions(FuncContainer_t * pContainer)
 	FuncContainer = *pContainer;
 }
 
+EXPORT void SetupInterfaces(void * pContainer)
+{
+}
+
 void RegisterFunction(HSQUIRRELVM pVM, const char * szName, SQFUNCTION pfnFunction)
 {
 	sq_pushroottable(pVM);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, mabako
+ * Copyright (c) 2010-2011, mabako
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ const char * g_szModuleName = "MySQL Module";
 EXPORT bool InitModule(char * szModuleName)
 {
 	strcpy(szModuleName, g_szModuleName);
-	LogPrintf("MySQL Module 1.0f by mabako loaded.");
+	LogPrintf("MySQL Module 1.0g by mabako loaded.");
 	return true;
 }
 
@@ -63,38 +63,4 @@ EXPORT void ScriptLoad(HSQUIRRELVM S)
 	RegisterFunction(S, "mysql_fetch_assoc", sq_mysql_fetch_assoc);
 	RegisterFunction(S, "mysql_insert_id", sq_mysql_insert_id);
 	RegisterFunction(S, "mysql_affected_rows", sq_mysql_affected_rows);
-}
-
-/*
-	This function is called when a script is unloaded.
-*/
-EXPORT void ScriptUnload(HSQUIRRELVM S)
-{
-}
-
-/*
-	This function is called for internal server callbacks.
-	Usage reserved.
-
-	Return
-		true: Callback was handled.
-		false: Callback was not handled.
-*/
-EXPORT bool HandleCallback(eModuleCallback Callback, void *pArgs)
-{
-	if(Callback == TestCallback)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-/*
-	This function is called every server pulse.
-	It is not recommended to run CPU-intensive code here.
-*/
-EXPORT void Pulse()
-{
-	
 }

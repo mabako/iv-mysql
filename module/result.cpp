@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, mabako
+ * Copyright (c) 2010-2011, mabako
  *
  * Based on mta-mysql module for Multi Theft Auto: San Andreas
  * Copyright (c) 2008, Alberto Alonso
